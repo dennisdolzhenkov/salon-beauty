@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Личный кабинет — Maison Élégance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>"/>
+  <style>
+    /* ───── БАЗА ───── */
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d0b0f;--bg2:#141018;--bg3:#1c1822;
+      --neon:#ff2d78;--gold:#c9a84c;
+      --white:#f0ecf4;--gray:#6b6575;--border:#2a2430;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Unbounded',sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
+
+    /* ───── ШАПКА ───── */
+    .header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.25rem 2.5rem;
+      background:rgba(13,11,15,.9);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:100;
+    }
+    .header__logo{font-size:1rem;font-weight:900;color:var(--white);text-decoration:none}
+    .header__logo em{color:var(--neon);font-style:normal}
+    .header__back{font-size:.6rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);text-decoration:none;transition:color .2s}
+    .header__back:hover{color:var(--neon)}
+
+    /* ───── ВРАППЕР ───── */
+    .wrap{max-width:520px;margin:0 auto;padding:3rem 1.5rem}
+
+    /* ───── ЭКРАНЫ ───── */
+    .screen{display:none;animation:fadeUp .4s ease}
+    .screen.active{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ───── ЗАГОЛОВКИ ЭКРАНОВ ───── */
+    .screen-title{
+      font-size:clamp(1.4rem,4vw,2rem);font-weight:900;
+      text-transform:uppercase;letter-spacing:-.02em;
+      margin-bottom:.5rem;line-height:1.1;
+    }
+    .screen-sub{font-size:.7rem;font-weight:300;color:var(--gray);margin-bottom:2.5rem;line-height:1.7}
+    .screen-sub em{color:var(--neon);font-style:normal}
+
+    /* ───── ПОЛЯ ВВОДА ───── */
+    .field{margin-bottom:1rem;overflow:hidden;transition:max-height .4s ease,opacity .4s ease;max-height:100px;opacity:1}
+    .field.hidden{max-height:0;opacity:0;margin:0;pointer-events:none}
+    .field label{display:block;font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);margin-bottom:.5rem}
+    .field input{
+      width:100%;border:1px solid var(--border);border-radius:0;
+      padding:.85rem 1rem;font-family:'Unbounded',sans-serif;
+      font-size:.75rem;font-weight:300;
+      background:var(--bg2);color:var(--white);
+      outline:none;transition:border-color .2s;
+    }
+    .field input:focus{border-color:var(--neon)}
+    .field input::placeholder{color:var(--gray);font-size:.7rem}
+
+    /* ───── КНОПКИ ───── */
+    .btn{
+      width:100%;padding:.9rem;
+      font-family:'Unbounded',sans-serif;font-size:.65rem;
+      font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      border:none;cursor:pointer;transition:all .2s;margin-top:.5rem;
+    }
+    .btn--neon{background:var(--neon);color:var(--bg)}
+    .btn--neon:hover{background:var(--white);color:var(--bg)}
+    .btn--ghost{background:transparent;color:var(--gray);border:1px solid var(--border)}
+    .btn--ghost:hover{border-color:var(--neon);color:var(--neon)}
+    .btn:disabled{opacity:.4;cursor:default}
+
+    /* ───── КОД ИЗ 4 ЦИФР ───── */
+    .code-inputs{display:flex;gap:.75rem;justify-content:center;margin-bottom:1.5rem}
+    .code-input{
+      width:60px;height:70px;
+      border:1px solid var(--border);
+      background:var(--bg2);
+      font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:700;
+      color:var(--white);text-align:center;outline:none;
+      transition:border-color .2s;
+      -moz-appearance:textfield;
+    }
+    .code-input:focus{border-color:var(--neon)}
+    .code-input::-webkit-outer-spin-button,
+    .code-input::-webkit-inner-spin-button{-webkit-appearance:none}
+
+    /* ───── АВАТАР ───── */
+    .avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:2rem}
+    .avatar{
+      width:90px;height:90px;border-radius:50%;
+      background:var(--bg3);border:2px solid var(--neon);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;
+      color:var(--neon);cursor:pointer;overflow:hidden;
+      transition:all .2s;position:relative;
+    }
+    .avatar:hover .avatar__overlay{opacity:1}
+    .avatar__overlay{
+      position:absolute;inset:0;background:rgba(13,11,15,.7);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .2s;
+      font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .avatar-hint{font-size:.6rem;color:var(--gray);margin-top:.75rem;letter-spacing:.05em}
+    #avatar-upload{display:none}
+
+    /* ───── ПРОФИЛЬ — ИНФО ───── */
+    .profile-phone{
+      font-size:.65rem;color:var(--gray);letter-spacing:.1em;
+      text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;
+      border-bottom:1px solid var(--border);
+    }
+    .profile-phone span{color:var(--neon)}
+
+    /* ───── СЕКЦИЯ В ЛК ───── */
+    .lk-section{margin-bottom:2rem}
+    .lk-section__title{
+      font-size:.55rem;font-weight:700;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--gray);
+      margin-bottom:1rem;padding-bottom:.5rem;
+      border-bottom:1px solid var(--border);
+    }
+
+    /* ───── ФОРМА ЗАПИСИ В ЛК ───── */
+    .booking-step{overflow:hidden;transition:max-height .5s ease,opacity .4s ease;max-height:0;opacity:0}
+    .booking-step.visible{max-height:200px;opacity:1}
+    .select-styled{
+      width:100%;border:1px solid var(--border);
+      padding:.85rem 1rem;font-family:'Unbounded',sans-serif;
+      font-size:.7rem;font-weight:300;
+      background:var(--bg2);color:var(--white);
+      outline:none;transition:border-color .2s;
+      appearance:none;cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6575' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 1rem center;
+    }
+    .select-styled:focus{border-color:var(--neon)}
+
+    /* слоты времени */
+    .time-slots{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+    .time-slot{
+      padding:.4rem .9rem;border:1px solid var(--border);
+      font-family:'Unbounded',sans-serif;font-size:.65rem;font-weight:400;
+      cursor:pointer;background:var(--bg2);color:var(--gray);transition:all .15s;
+    }
+    .time-slot:hover{border-color:var(--neon);color:var(--neon)}
+    .time-slot.selected{background:var(--neon);color:var(--bg);border-color:var(--neon);font-weight:700}
+    .time-slot.busy{color:var(--border);cursor:default;text-decoration:line-through}
+    .time-hint{font-size:.65rem;color:var(--gray);font-style:italic}
+
+    /* ───── МОИ ЗАПИСИ ───── */
+    .appointment-card{
+      border:1px solid var(--border);padding:1.25rem;
+      margin-bottom:.75rem;background:var(--bg2);
+      transition:border-color .2s;
+    }
+    .appointment-card:hover{border-color:var(--neon)}
+    .appointment-card__head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+    .appointment-card__service{font-size:.75rem;font-weight:700;color:var(--white)}
+    .appointment-card__status{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem}
+    .status-active{background:rgba(76,175,80,.15);color:#4caf50;border:1px solid #4caf50}
+    .status-cancelled{background:rgba(255,45,120,.1);color:var(--neon);border:1px solid var(--neon)}
+    .appointment-card__info{font-size:.65rem;color:var(--gray);line-height:1.8}
+    .appointment-card__info span{color:var(--white)}
+    .btn-cancel{
+      margin-top:.75rem;padding:.4rem .9rem;
+      font-family:'Unbounded',sans-serif;font-size:.55rem;
+      font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      background:transparent;color:var(--gray);border:1px solid var(--border);
+      cursor:pointer;transition:all .2s;
+    }
+    .btn-cancel:hover{border-color:var(--neon);color:var(--neon)}
+
+    /* ───── СООБЩЕНИЯ ───── */
+    .msg{
+      font-size:.65rem;padding:.75rem 1rem;margin-top:.75rem;
+      letter-spacing:.05em;display:none;
+    }
+    .msg.success{background:rgba(76,175,80,.1);color:#4caf50;border:1px solid #4caf50;display:block}
+    .msg.error{background:rgba(255,45,120,.1);color:var(--neon);border:1px solid var(--neon);display:block}
+
+    /* ───── ВЫХОД ───── */
+    .logout-btn{
+      display:block;width:100%;padding:.75rem;
+      font-family:'Unbounded',sans-serif;font-size:.6rem;
+      font-weight:400;letter-spacing:.1em;text-transform:uppercase;
+      background:transparent;color:var(--gray);border:1px solid var(--border);
+      cursor:pointer;transition:all .2s;text-align:center;margin-top:2rem;
+    }
+    .logout-btn:hover{color:var(--neon);border-color:var(--neon)}
+
+    /* ───── ТАЙМЕР ПОВТОРА ───── */
+    .resend{font-size:.6rem;color:var(--gray);text-align:center;margin-top:1rem}
+    .resend button{
+      background:none;border:none;color:var(--neon);
+      font-family:'Unbounded',sans-serif;font-size:.6rem;
+      cursor:pointer;text-decoration:underline;display:none;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/" class="header__logo">M<em>É</em></a>
+  <a href="/" class="header__back">← На сайт</a>
+</header>
+
+<div class="wrap">
+
+  <!-- ───── ЭКРАН 1: ВВОД ТЕЛЕФОНА ───── -->
+  <div class="screen active" id="screen-phone">
+    <div class="screen-title">Вход<br>в кабинет</div>
+    <div class="screen-sub">Введите номер телефона — отправим код подтверждения.<br>Тестовый код: <em>9999</em></div>
+
+    <div class="field">
+      <label>Номер телефона</label>
+      <input type="tel" id="phone-input" placeholder="+7 (900) 000-00-00" maxlength="18"/>
+    </div>
+    <button class="btn btn--neon" id="btn-send-code">Получить код →</button>
+  </div>
+
+  <!-- ───── ЭКРАН 2: ВВОД КОДА ───── -->
+  <div class="screen" id="screen-code">
+    <div class="screen-title">Код<br>подтверждения</div>
+    <div class="screen-sub" id="code-sub">Введите 4-значный код отправленный на <em id="phone-display"></em></div>
+
+    <div class="code-inputs">
+      <input class="code-input" type="number" maxlength="1" id="c1"/>
+      <input class="code-input" type="number" maxlength="1" id="c2"/>
+      <input class="code-input" type="number" maxlength="1" id="c3"/>
+      <input class="code-input" type="number" maxlength="1" id="c4"/>
+    </div>
+
+    <div class="msg" id="code-msg"></div>
+    <div class="resend">
+      Не пришёл код?
+      <button id="btn-resend" onclick="resendCode()">Отправить снова</button>
+      <span id="resend-timer"></span>
+    </div>
+    <button class="btn btn--ghost" style="margin-top:1rem" onclick="goScreen('screen-phone')">← Изменить номер</button>
+  </div>
+
+  <!-- ───── ЭКРАН 3: ЛИЧНЫЙ КАБИНЕТ ───── -->
+  <div class="screen" id="screen-lk">
+
+    <!-- аватар -->
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatar-circle" onclick="document.getElementById('avatar-upload').click()">
+        <span id="avatar-initials">?</span>
+        <div class="avatar__overlay">Изменить</div>
+      </div>
+      <div class="avatar-hint">Нажмите чтобы добавить фото</div>
+      <input type="file" id="avatar-upload" accept="image/*" onchange="uploadAvatar(this)"/>
+    </div>
+
+    <!-- телефон -->
+    <div class="profile-phone">Вы вошли как <span id="lk-phone-display"></span></div>
+
+    <!-- ───── ПРОФИЛЬ ───── -->
+    <div class="lk-section">
+      <div class="lk-section__title">Мои данные</div>
+      <div class="field">
+        <label>Имя</label>
+        <input type="text" id="inp-firstname" placeholder="Анна" oninput="saveProfile()"/>
+      </div>
+      <div class="field">
+        <label>Отчество</label>
+        <input type="text" id="inp-middlename" placeholder="Сергеевна" oninput="saveProfile()"/>
+      </div>
+      <div class="msg" id="profile-msg"></div>
+    </div>
+
+    <!-- ───── ЗАПИСЬ ───── -->
+    <div class="lk-section">
+      <div class="lk-section__title">Записаться</div>
+
+      <!-- шаг 1: услуга -->
+      <div class="field">
+        <label>Услуга *</label>
+        <select class="select-styled" id="lk-service" onchange="onServiceChange()">
+          <option value="">— Выберите услугу —</option>
+        </select>
+      </div>
+
+      <!-- шаг 2: мастер (появляется после услуги) -->
+      <div class="booking-step" id="step-master">
+        <div class="field" style="margin-top:.75rem">
+          <label>Мастер *</label>
+          <select class="select-styled" id="lk-master" onchange="onMasterChange()">
+            <option value="">— Выберите мастера —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- шаг 3: дата (появляется после мастера) -->
+      <div class="booking-step" id="step-date">
+        <div class="field" style="margin-top:.75rem">
+          <label>Дата *</label>
+          <input type="date" class="select-styled" id="lk-date" onchange="onDateChange()"/>
+        </div>
+      </div>
+
+      <!-- шаг 4: время (появляется после даты) -->
+      <div class="booking-step" id="step-time">
+        <div class="field" style="margin-top:.75rem">
+          <label>Время *</label>
+          <div class="time-slots" id="lk-time-slots">
+            <p class="time-hint">Загружаем слоты...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- шаг 5: кнопка (появляется после времени) -->
+      <div class="booking-step" id="step-submit">
+        <button class="btn btn--neon" style="margin-top:1rem" onclick="submitBooking()">Подтвердить запись ✦</button>
+      </div>
+
+      <div class="msg" id="booking-msg"></div>
+    </div>
+
+    <!-- ───── МОИ ЗАПИСИ ───── -->
+    <div class="lk-section">
+      <div class="lk-section__title">Мои записи</div>
+      <div id="my-appointments">
+        <p class="time-hint">Загружаем...</p>
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Выйти из аккаунта</button>
+  </div>
+
+</div>
+
+<script>
+const API = 'http://localhost:3000/api';
+const TEST_CODE = '9999'; // тестовый код — в продакшене заменить на SMS сервис
+const ALL_TIMES = ['09:00','09:30','10:00','10:30','11:00','11:30',
+                   '12:00','13:00','14:00','15:00','15:30','16:00','17:00','18:00'];
+
+let currentPhone = '';
+let selectedTime = null;
+let resendInterval = null;
+
+// ───── НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ ─────
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ───── МАСКА ТЕЛЕФОНА ─────
+document.getElementById('phone-input').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g, '');           // оставляем только цифры
+  if (v.startsWith('8')) v = '7' + v.slice(1);    // 8 → 7
+  if (!v.startsWith('7')) v = '7' + v;            // добавляем 7 если нет
+  v = v.slice(0, 11);                              // максимум 11 цифр
+
+  // форматируем в +7 (XXX) XXX-XX-XX
+  let r = '+7';
+  if (v.length > 1) r += ' (' + v.slice(1, 4);
+  if (v.length > 4) r += ') ' + v.slice(4, 7);
+  if (v.length > 7) r += '-' + v.slice(7, 9);
+  if (v.length > 9) r += '-' + v.slice(9, 11);
+  this.value = r;
+});
+
+// ───── ОТПРАВКА КОДА ─────
+document.getElementById('btn-send-code').addEventListener('click', sendCode);
+
+function sendCode() {
+  const phone = document.getElementById('phone-input').value.trim();
+  if (phone.replace(/\D/g,'').length < 11) {
+    alert('Введите полный номер телефона');
+    return;
+  }
+  currentPhone = phone;
+  document.getElementById('phone-display').textContent = phone;
+  document.getElementById('lk-phone-display').textContent = phone;
+
+  goScreen('screen-code');
+  document.getElementById('c1').focus(); // фокус на первую цифру
+  startResendTimer();                    // запускаем таймер повтора
+  console.log('Тестовый код: 9999');    // в продакшене здесь был бы SMS запрос
+}
+
+// ───── АВТОПЕРЕХОД МЕЖДУ ПОЛЯМИ КОДА ─────
+['c1','c2','c3','c4'].forEach((id, i, arr) => {
+  const input = document.getElementById(id);
+
+  input.addEventListener('input', function() {
+    this.value = this.value.slice(-1); // оставляем только последнюю цифру
+    if (this.value && i < arr.length - 1) {
+      document.getElementById(arr[i+1]).focus(); // переходим к следующей
+    }
+    if (i === arr.length - 1 && this.value) {
+      verifyCode(); // проверяем код после ввода последней цифры
+    }
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && !this.value && i > 0) {
+      document.getElementById(arr[i-1]).focus(); // назад по Backspace
+    }
+  });
+});
+
+// ───── ПРОВЕРКА КОДА ─────
+function verifyCode() {
+  const code = ['c1','c2','c3','c4'].map(id => document.getElementById(id).value).join('');
+  const msg  = document.getElementById('code-msg');
+
+  if (code === TEST_CODE) {
+    // код верный — входим в ЛК
+    msg.className = 'msg success';
+    msg.textContent = '✓ Код верный! Входим...';
+    setTimeout(() => {
+      goScreen('screen-lk');
+      loadProfile();
+      loadLkServices();
+      loadMyAppointments();
+    }, 800);
+  } else if (code.length === 4) {
+    // код неверный — показываем ошибку
+    msg.className = 'msg error';
+    msg.textContent = '✗ Неверный код. Попробуйте ещё раз.';
+    ['c1','c2','c3','c4'].forEach(id => {
+      document.getElementById(id).value = ''; // очищаем поля
+    });
+    document.getElementById('c1').focus();
+  }
+}
+
+// ───── ТАЙМЕР ПОВТОРНОЙ ОТПРАВКИ ─────
+function startResendTimer() {
+  let secs = 60; // обратный отсчёт 60 секунд
+  const timerEl  = document.getElementById('resend-timer');
+  const resendBtn = document.getElementById('btn-resend');
+  resendBtn.style.display = 'none';
+  timerEl.textContent = `(${secs}с)`;
+
+  clearInterval(resendInterval);
+  resendInterval = setInterval(() => {
+    secs--;
+    timerEl.textContent = `(${secs}с)`;
+    if (secs <= 0) {
+      clearInterval(resendInterval);
+      timerEl.textContent = '';
+      resendBtn.style.display = 'inline'; // показываем кнопку повтора
+    }
+  }, 1000);
+}
+
+function resendCode() {
+  ['c1','c2','c3','c4'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('code-msg').className = 'msg';
+  document.getElementById('c1').focus();
+  startResendTimer();
+  console.log('Тестовый код: 9999');
+}
+
+// ───── АВАТАР ─────
+function uploadAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const circle = document.getElementById('avatar-circle');
+    circle.innerHTML = `<img src="${e.target.result}" alt="аватар"/><div class="avatar__overlay">Изменить</div>`;
+    localStorage.setItem('me_avatar', e.target.result); // сохраняем в localStorage
+  };
+  reader.readAsDataURL(file);
+}
+
+// ───── ПРОФИЛЬ ─────
+function saveProfile() {
+  const data = {
+    firstName:  document.getElementById('inp-firstname').value,
+    middleName: document.getElementById('inp-middlename').value,
+  };
+  localStorage.setItem('me_profile', JSON.stringify(data)); // сохраняем локально
+  updateAvatar();
+}
+
+function loadProfile() {
+  // загружаем сохранённый профиль
+  const saved = localStorage.getItem('me_profile');
+  if (saved) {
+    const data = JSON.parse(saved);
+    document.getElementById('inp-firstname').value  = data.firstName  || '';
+    document.getElementById('inp-middlename').value = data.middleName || '';
+  }
+
+  // загружаем аватар
+  const avatar = localStorage.getItem('me_avatar');
+  if (avatar) {
+    const circle = document.getElementById('avatar-circle');
+    circle.innerHTML = `<img src="${avatar}" alt="аватар"/><div class="avatar__overlay">Изменить</div>`;
+  } else {
+    updateAvatar();
+  }
+
+  // минимальная дата — сегодня
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('lk-date').min = today;
+}
+
+function updateAvatar() {
+  // инициалы из имени
+  const first  = document.getElementById('inp-firstname').value;
+  const middle = document.getElementById('inp-middlename').value;
+  if (!localStorage.getItem('me_avatar')) {
+    const initials = (first[0] || '') + (middle[0] || '') || currentPhone.slice(-2);
+    document.getElementById('avatar-initials').textContent = initials.toUpperCase() || '?';
+  }
+}
+
+// ───── УСЛУГИ В ЛК ─────
+async function loadLkServices() {
+  const res  = await fetch(`${API}/services`);
+  const data = await res.json();
+  const sel  = document.getElementById('lk-service');
+
+  data.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = `${s.name} — ${s.price.toLocaleString('ru')} ₽`;
+    opt.dataset.category = s.category;
+    sel.appendChild(opt);
+  });
+}
+
+// ───── ФОРМА ЗАПИСИ — ШАГИ ─────
+function showStep(id) {
+  document.getElementById(id).classList.add('visible'); // показываем шаг
+}
+
+async function onServiceChange() {
+  const sel  = document.getElementById('lk-service');
+  const opt  = sel.options[sel.selectedIndex];
+  if (!opt.value) return;
+
+  // загружаем подходящих мастеров
+  const res     = await fetch(`${API}/masters`);
+  const masters = await res.json();
+  const cat     = opt.dataset.category;
+
+  const masterSel = document.getElementById('lk-master');
+  masterSel.innerHTML = '<option value="">— Выберите мастера —</option>';
+
+  // фильтруем по специализации
+  masters.filter(m => m.specialization === cat || m.specialization === 'both')
+    .forEach(m => {
+      const o = document.createElement('option');
+      o.value = m.id;
+      o.textContent = `${m.name} (${m.experience} лет)`;
+      masterSel.appendChild(o);
+    });
+
+  showStep('step-master'); // показываем шаг выбора мастера
+
+  // сбрасываем следующие шаги
+  document.getElementById('step-date').classList.remove('visible');
+  document.getElementById('step-time').classList.remove('visible');
+  document.getElementById('step-submit').classList.remove('visible');
+  selectedTime = null;
+}
+
+function onMasterChange() {
+  if (!document.getElementById('lk-master').value) return;
+  showStep('step-date'); // показываем шаг выбора даты
+
+  document.getElementById('step-time').classList.remove('visible');
+  document.getElementById('step-submit').classList.remove('visible');
+  selectedTime = null;
+}
+
+async function onDateChange() {
+  const masterId = document.getElementById('lk-master').value;
+  const date     = document.getElementById('lk-date').value;
+  if (!masterId || !date) return;
+
+  // загружаем занятые слоты
+  const res  = await fetch(`${API}/busy-slots?master_id=${masterId}&date=${date}`);
+  const busy = await res.json();
+
+  const container = document.getElementById('lk-time-slots');
+  container.innerHTML = '';
+  selectedTime = null;
+
+  ALL_TIMES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className   = 'time-slot';
+    btn.textContent = t;
+
+    if (busy.includes(t)) {
+      btn.classList.add('busy');
+      btn.disabled = true;
+    } else {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedTime = t;
+        showStep('step-submit'); // показываем кнопку подтверждения
+      });
+    }
+    container.appendChild(btn);
+  });
+
+  showStep('step-time'); // показываем слоты времени
+  document.getElementById('step-submit').classList.remove('visible');
+}
+
+// ───── ОТПРАВКА ЗАПИСИ ─────
+async function submitBooking() {
+  const serviceId = document.getElementById('lk-service').value;
+  const masterId  = document.getElementById('lk-master').value;
+  const date      = document.getElementById('lk-date').value;
+  const msg       = document.getElementById('booking-msg');
+
+  // имя берём из профиля
+  const profile   = JSON.parse(localStorage.getItem('me_profile') || '{}');
+  const name      = [profile.firstName, profile.middleName].filter(Boolean).join(' ') || 'Клиент';
+
+  if (!serviceId || !masterId || !date || !selectedTime) {
+    msg.className   = 'msg error';
+    msg.textContent = 'Выберите все поля';
+    return;
+  }
+
+  const res = await fetch(`${API}/appointments`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      client_name:  name,
+      client_phone: currentPhone,
+      master_id:    masterId,
+      service_id:   serviceId,
+      date, time: selectedTime, notes: ''
+    })
+  });
+
+  const result = await res.json();
+
+  if (res.ok) {
+    msg.className   = 'msg success';
+    msg.textContent = `✦ Запись #${result.id} подтверждена!`;
+
+    // сбрасываем форму
+    document.getElementById('lk-service').value = '';
+    ['step-master','step-date','step-time','step-submit'].forEach(id => {
+      document.getElementById(id).classList.remove('visible');
+    });
+    selectedTime = null;
+
+    // обновляем список записей
+    loadMyAppointments();
+  } else {
+    msg.className   = 'msg error';
+    msg.textContent = result.error || 'Произошла ошибка';
+  }
+}
+
+// ───── МОИ ЗАПИСИ ─────
+async function loadMyAppointments() {
+  const res  = await fetch(`${API}/appointments`);
+  const all  = await res.json();
+
+  // фильтруем только записи текущего пользователя по телефону
+  const mine = all.filter(a => a.client_phone === currentPhone);
+  const wrap = document.getElementById('my-appointments');
+
+  if (mine.length === 0) {
+    wrap.innerHTML = '<p class="time-hint">У вас пока нет записей</p>';
+    return;
+  }
+
+  wrap.innerHTML = mine.map(a => `
+    <div class="appointment-card">
+      <div class="appointment-card__head">
+        <div class="appointment-card__service">${a.service_name}</div>
+        <div class="appointment-card__status ${a.status === 'active' ? 'status-active' : 'status-cancelled'}">
+          ${a.status === 'active' ? 'Активна' : 'Отменена'}
+        </div>
+      </div>
+      <div class="appointment-card__info">
+        Мастер: <span>${a.master_name}</span><br>
+        Дата: <span>${a.date} в ${a.time}</span><br>
+        Сумма: <span>${a.service_price?.toLocaleString('ru')} ₽</span>
+      </div>
+      ${a.status === 'active' ? `<button class="btn-cancel" onclick="cancelAppointment(${a.id})">Отменить запись</button>` : ''}
+    </div>
+  `).join('');
+}
+
+// ───── ОТМЕНА ЗАПИСИ ─────
+async function cancelAppointment(id) {
+  if (!confirm('Отменить эту запись?')) return;
+  await fetch(`${API}/appointments/${id}`, { method: 'DELETE' });
+  loadMyAppointments(); // обновляем список
+}
+
+// ───── ВЫХОД ─────
+function logout() {
+  currentPhone = '';
+  selectedTime = null;
+  document.getElementById('phone-input').value = '';
+  ['c1','c2','c3','c4'].forEach(id => document.getElementById(id).value = '');
+  goScreen('screen-phone');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maison Élégance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.3/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.3.0/css/glightbox.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css"/>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="header__logo">M<em>É</em></div>
+  <nav class="header__nav">
+    <a href="#services">Услуги</a>
+    <a href="#masters">Мастера</a>
+    <a href="#gallery">Работы</a>
+    <a href="#reviews">Отзывы</a>
+  </nav>
+  <div style="display:flex;gap:.75rem;align-items:center">
+    <a href="/lk.html" class="header__lk">ЛК</a>
+    <a href="/lk.html" class="header__cta">Записаться →</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__left">
+    <div class="hero__tag">✦ Салон красоты · Москва</div>
+    <h1 class="hero__title">
+      Твой<br><em>образ</em><br>— твои<br>правила
+    </h1>
+    <p class="hero__sub">Маникюр, nail-art, причёски и сложные техники для тех, кто не боится быть собой</p>
+    <div class="hero__btns">
+      <a href="/lk.html" class="btn btn--neon">Записаться</a>
+      <a href="#services" class="btn btn--ghost">Услуги ↓</a>
+    </div>
+    <div class="hero__counters">
+      <div class="hero__counter"><b>500+</b><span>клиентов</span></div>
+      <div class="hero__counter"><b>5★</b><span>рейтинг</span></div>
+      <div class="hero__counter"><b>12</b><span>мастеров</span></div>
+    </div>
+  </div>
+  <div class="hero__right">
+    <div class="hero__img-wrap">
+      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80" alt="модель" class="hero__img"/>
+      <div class="hero__img-badge">nail art ✦</div>
+    </div>
+    <div class="hero__img-small-wrap">
+      <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80" alt="маникюр" class="hero__img-small"/>
+    </div>
+  </div>
+</section>
+
+<!-- БЕГУЩАЯ СТРОКА -->
+<div class="ticker">
+  <div class="ticker__inner">
+    <span>Nail Art ✦</span><span>Балаяж ✦</span><span>3D дизайн ✦</span>
+    <span>Кератин ✦</span><span>Омбре ✦</span><span>Маникюр ✦</span>
+    <span>Причёски ✦</span><span>Свадебный образ ✦</span>
+    <span>Nail Art ✦</span><span>Балаяж ✦</span><span>3D дизайн ✦</span>
+    <span>Кератин ✦</span><span>Омбре ✦</span><span>Маникюр ✦</span>
+    <span>Причёски ✦</span><span>Свадебный образ ✦</span>
+  </div>
+</div>
+
+<!-- УСЛУГИ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__num">01</span>
+      <h2 class="section__title">Услуги</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-cat="all">Все</button>
+      <button class="filter-tab" data-cat="nails">Ногти</button>
+      <button class="filter-tab" data-cat="hair">Причёски</button>
+    </div>
+    <div class="services-grid" id="services-grid"></div>
+  </div>
+</section>
+
+<!-- АВТОРИЗАЦИЯ -->
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-wrap">
+      <div class="auth-left">
+        <div class="auth-tag">✦ Личный кабинет</div>
+        <h2 class="auth-title">Войдите<br><em>в аккаунт</em></h2>
+        <p class="auth-sub">Записывайтесь онлайн, отслеживайте историю визитов и управляйте записями</p>
+      </div>
+      <div class="auth-right">
+        <div class="auth-form">
+          <!-- шаг 1 -->
+          <div id="auth-step-phone">
+            <div class="auth-field">
+              <label>Номер телефона</label>
+              <input type="tel" id="auth-phone" placeholder="+7 (900) 000-00-00"/>
+            </div>
+            <button class="auth-btn" onclick="authSendCode()">Получить код →</button>
+            <div class="auth-note">Тестовый код: <em>9999</em></div>
+          </div>
+          <!-- шаг 2 -->
+          <div id="auth-step-code" style="display:none">
+            <div class="auth-field">
+              <label>Код из SMS</label>
+              <div class="auth-code-inputs">
+                <input class="auth-code-input" type="number" id="ac1"/>
+                <input class="auth-code-input" type="number" id="ac2"/>
+                <input class="auth-code-input" type="number" id="ac3"/>
+                <input class="auth-code-input" type="number" id="ac4"/>
+              </div>
+            </div>
+            <div class="auth-msg" id="auth-msg"></div>
+            <button class="auth-btn auth-btn--ghost" onclick="authBack()">← Изменить номер</button>
+          </div>
+          <!-- шаг 3 -->
+          <div id="auth-step-success" style="display:none">
+            <div class="auth-success">
+              <div class="auth-success__icon">✓</div>
+              <div class="auth-success__text">Вы вошли!</div>
+              <a href="/lk.html" class="auth-btn" style="margin-top:1rem;display:block;text-align:center;text-decoration:none">Открыть кабинет →</a>
+              <button class="auth-btn auth-btn--ghost" style="margin-top:.5rem" onclick="authLogout()">Выйти</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- БАННЕР -->
+<div class="banner">
+  <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1800&q=80" alt="атмосфера" class="banner__img"/>
+  <div class="banner__overlay">
+    <div class="banner__text">Красота — это не стандарт.<br><em>Это состояние.</em></div>
+  </div>
+</div>
+
+<!-- МАСТЕРА -->
+<section class="section" id="masters">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__num">02</span>
+      <h2 class="section__title">Мастера</h2>
+    </div>
+    <div class="masters-grid" id="masters-grid"></div>
+  </div>
+</section>
+
+<!-- ГАЛЕРЕЯ -->
+<section class="section" id="gallery">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__num">03</span>
+      <h2 class="section__title">Работы</h2>
+    </div>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80" alt="nail art"/>
+      <div class="gallery-item__label">Nail art</div>
+    </div>
+    <div class="gallery-item gallery-item--tall">
+      <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=600&q=80" alt="причёска"/>
+      <div class="gallery-item__label">Причёска</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=600&q=80" alt="маникюр"/>
+      <div class="gallery-item__label">Маникюр</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1582095133179-bfd08e2979ef?w=600&q=80" alt="салон"/>
+      <div class="gallery-item__label">Атмосфера</div>
+    </div>
+    <div class="gallery-item gallery-item--wide">
+      <img src="https://images.unsplash.com/photo-1601931935821-5fbe71157695?w=900&q=80" alt="балаяж"/>
+      <div class="gallery-item__label">Балаяж</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=600&q=80" alt="3d дизайн"/>
+      <div class="gallery-item__label">3D дизайн</div>
+    </div>
+  </div>
+</section>
+
+<!-- ОТЗЫВЫ -->
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__num">04</span>
+      <h2 class="section__title">Отзывы</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p class="review-card__text">«Алёна сделала невероятный nail-art — именно то, что я хотела. Уже записалась снова»</p>
+        <div class="review-card__author">Мария К.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p class="review-card__text">«Мария — волшебник! Балаяж получился лучше чем на референсе. Очень довольна»</p>
+        <div class="review-card__author">Анна П.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-card__stars">★★★★☆</div>
+        <p class="review-card__text">«Удобная запись, уютная атмосфера, внимательные мастера. Однозначно вернусь!»</p>
+        <div class="review-card__author">Екатерина В.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КНОПКИ ДЕЙСТВИЙ -->
+<section class="section" id="action">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__num">05</span>
+      <h2 class="section__title">Готовы?</h2>
+    </div>
+    <div class="action-btns">
+      <a href="/lk.html" class="action-btn action-btn--main">
+        <div class="action-btn__icon">✦</div>
+        <div class="action-btn__text">
+          <span>Записаться онлайн</span>
+          <small>Выбрать мастера и время</small>
+        </div>
+      </a>
+      <a href="/lk.html" class="action-btn action-btn--secondary">
+        <div class="action-btn__icon">◈</div>
+        <div class="action-btn__text">
+          <span>Мой профиль</span>
+          <small>Личный кабинет</small>
+        </div>
+      </a>
+      <a href="tel:+79272610014" class="action-btn action-btn--call">
+        <div class="action-btn__icon">✆</div>
+        <div class="action-btn__text">
+          <span>Позвонить</span>
+          <small>+7 927 261-00-14</small>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer class="footer">
+  <div class="footer__top">
+    <div class="footer__logo">Maison<br><em>Élégance</em></div>
+    <div class="footer__links">
+      <a href="#services">Услуги</a>
+      <a href="#masters">Мастера</a>
+      <a href="#gallery">Работы</a>
+      <a href="/lk.html">Записаться</a>
+      <a href="/admin.html">Админ</a>
+    </div>
+  </div>
+  <div class="footer__bottom">© 2026 Maison Élégance</div>
+</footer>
+
+<!-- КНОПКА ЗВОНКА -->
+<a href="tel:+79272610014" class="call-btn">
+  <div class="call-btn__ring"></div>
+  <div class="call-btn__ring call-btn__ring--2"></div>
+  <div class="call-btn__icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.92 1.18 2 2 0 012.92 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+    </svg>
+  </div>
+  <span class="call-btn__label">Позвонить</span>
+</a>
+
+<!-- БИБЛИОТЕКИ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.3/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.3.0/js/glightbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.1/imask.min.js"></script>
+<script src="js/main.js"></script>
+
+<!-- АВТОРИЗАЦИЯ -->
+<script>
+const TEST_CODE = '9999';
+
+document.getElementById('auth-phone').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'');
+  if (v.startsWith('8')) v = '7' + v.slice(1);
+  if (!v.startsWith('7')) v = '7' + v;
+  v = v.slice(0,11);
+  let r = '+7';
+  if (v.length > 1) r += ' (' + v.slice(1,4);
+  if (v.length > 4) r += ') ' + v.slice(4,7);
+  if (v.length > 7) r += '-' + v.slice(7,9);
+  if (v.length > 9) r += '-' + v.slice(9,11);
+  this.value = r;
+});
+
+function authSendCode() {
+  const phone = document.getElementById('auth-phone').value.trim();
+  if (phone.replace(/\D/g,'').length < 11) { alert('Введите полный номер'); return; }
+  localStorage.setItem('me_phone', phone);
+  document.getElementById('auth-step-phone').style.display = 'none';
+  document.getElementById('auth-step-code').style.display  = 'block';
+  document.getElementById('ac1').focus();
+}
+
+function authBack() {
+  document.getElementById('auth-step-code').style.display  = 'none';
+  document.getElementById('auth-step-phone').style.display = 'block';
+  ['ac1','ac2','ac3','ac4'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('auth-msg').className = 'auth-msg';
+}
+
+['ac1','ac2','ac3','ac4'].forEach((id, i, arr) => {
+  const inp = document.getElementById(id);
+  inp.addEventListener('input', function() {
+    this.value = this.value.slice(-1);
+    if (this.value && i < arr.length-1) document.getElementById(arr[i+1]).focus();
+    if (i === arr.length-1 && this.value) authVerify();
+  });
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Backspace' && !this.value && i>0) document.getElementById(arr[i-1]).focus();
+  });
+});
+
+function authVerify() {
+  const code = ['ac1','ac2','ac3','ac4'].map(id => document.getElementById(id).value).join('');
+  const msg  = document.getElementById('auth-msg');
+  if (code === TEST_CODE) {
+    msg.className = 'auth-msg success';
+    msg.textContent = '✓ Код верный!';
+    setTimeout(() => {
+      document.getElementById('auth-step-code').style.display    = 'none';
+      document.getElementById('auth-step-success').style.display = 'block';
+    }, 600);
+  } else if (code.length === 4) {
+    msg.className = 'auth-msg error';
+    msg.textContent = '✗ Неверный код. Тестовый: 9999';
+    ['ac1','ac2','ac3','ac4'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ac1').focus();
+  }
+}
+
+function authLogout() {
+  localStorage.removeItem('me_phone');
+  ['ac1','ac2','ac3','ac4'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('auth-step-success').style.display = 'none';
+  document.getElementById('auth-step-phone').style.display   = 'block';
+  document.getElementById('auth-phone').value = '';
+  document.getElementById('auth-msg').className = 'auth-msg';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('me_phone')) {
+    document.getElementById('auth-step-phone').style.display   = 'none';
+    document.getElementById('auth-step-success').style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>
