@@ -4,11 +4,11 @@ const ALL_TIMES = ['09:00','09:30','10:00','10:30','11:00','11:30',
                    '12:00','13:00','14:00','15:00','15:30','16:00','17:00','18:00'];
 
 const MASTER_PHOTOS = [
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80',
+  'https://p1.zoon.ru/e/b/610e9daa56313d599963bd20_623b486d7e981.jpg',
+  'https://p1.zoon.ru/1/e/5d11a7049850a22e876debf9_5f1ffac663c27.jpg',
+  'https://academy-expert.ru/wp-content/uploads/2023/12/%D0%BF%D1%80%D0%BE%D0%B4%D0%B2.-%D0%B1%D1%8C%D1%8E%D1%82%D0%B8-768x628.jpg',
+  'https://avatars.mds.yandex.net/i?id=8d417a316168724069312f679bd74c48_l-5869219-images-thumbs&n=13',
+  'https://avatars.mds.yandex.net/i?id=da82418dd8c3562e8b7c598146f2acc2_l-5404323-images-thumbs&n=13',
 ];
 
 let selectedTime = null;
