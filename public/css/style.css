@@ -805,37 +805,6 @@ body {
   .footer__links { align-items: flex-start; }
 }
 
-/* ───── КАСТОМНЫЙ КУРСОР ───── */
-* { cursor: none; } /* скрываем стандартный курсор */
-
-.custom-cursor {
-  position: fixed;          /* всегда поверх страницы */
-  width: 36px; height: 36px;
-  border: 1.5px solid var(--neon); /* неоновое кольцо */
-  border-radius: 50%;
-  pointer-events: none;     /* не перехватывает клики */
-  z-index: 9999;
-  transform: translate(-50%, -50%); /* центрируем относительно мыши */
-  transition: width .2s, height .2s, background .2s; /* плавное изменение */
-  mix-blend-mode: difference; /* инвертирует цвет под курсором */
-}
-
-.custom-cursor.cursor--hover {
-  width: 60px; height: 60px; /* увеличивается при наведении */
-  background: var(--neon);
-  opacity: 0.15;
-}
-
-.custom-cursor-dot {
-  position: fixed;
-  width: 4px; height: 4px;
-  background: var(--neon);  /* неоновая точка */
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-}
-
 /* ───── ФОТО МАСТЕРОВ ───── */
 .master-card {
   padding: 0;              /* убираем старый padding — фото займёт верх */

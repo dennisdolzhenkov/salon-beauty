@@ -13,34 +13,6 @@ const MASTER_PHOTOS = [
 
 let selectedTime = null;
 
-// ───── КАСТОМНЫЙ КУРСОР ─────
-const cursor = document.createElement('div');
-cursor.className = 'custom-cursor';
-document.body.appendChild(cursor);
-
-const cursorDot = document.createElement('div');
-cursorDot.className = 'custom-cursor-dot';
-document.body.appendChild(cursorDot);
-
-document.addEventListener('mousemove', e => {
-  cursor.style.left    = e.clientX + 'px';
-  cursor.style.top     = e.clientY + 'px';
-  cursorDot.style.left = e.clientX + 'px';
-  cursorDot.style.top  = e.clientY + 'px';
-});
-
-document.addEventListener('mouseover', e => {
-  if (e.target.matches('a,button,.service-card,.master-card,.gallery-item,.time-slot,.action-btn,.call-btn')) {
-    cursor.classList.add('cursor--hover');
-  }
-});
-
-document.addEventListener('mouseout', e => {
-  if (e.target.matches('a,button,.service-card,.master-card,.gallery-item,.time-slot,.action-btn,.call-btn')) {
-    cursor.classList.remove('cursor--hover');
-  }
-});
-
 // ───── GSAP АНИМАЦИИ ─────
 window.addEventListener('load', () => {
   if (typeof gsap === 'undefined') return;
