@@ -1,234 +1,118 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Админ-панель — Maison Élégance</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maison Élégance — Административная панель</title>
   <style>
-    /* ───── СБРОС И БАЗА ───── */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Georgia, serif; background: #f5f0eb; color: #1a1410; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Georgia,serif;background:#f5f0eb;color:#1a1410;min-height:100vh}
 
-    /* ───── ШАПКА АДМИНКИ ───── */
-    .admin-header {
-      background: #1a1410;        /* тёмный фон */
-      color: #f5ede0;             /* светлый текст */
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .admin-header{
+      background:#1a1410;color:#f5ede0;padding:1rem 2rem;
+      display:flex;align-items:center;justify-content:space-between;
     }
-    .admin-header h1 { font-size: 1.2rem; font-weight: 400; }
-    .admin-header span { font-size: 0.75rem; color: #c4a07a; letter-spacing: 0.1em; }
+    .admin-header h1{font-size:1.1rem;font-weight:400}
+    .admin-header a{color:#c4a07a;text-decoration:none;font-size:.8rem}
 
-    /* ───── ВКЛАДКИ НАВИГАЦИИ ───── */
-    .tabs {
-      display: flex;              /* вкладки в ряд */
-      background: #fff;
-      border-bottom: 2px solid #e8ddd4;
-      padding: 0 2rem;
+    .tabs{display:flex;background:#fff;border-bottom:2px solid #e8ddd4;padding:0 2rem}
+    .tab-btn{
+      padding:1rem 1.5rem;border:none;background:none;font-family:inherit;
+      font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+      color:#aaa;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;
     }
-    .tab-btn {
-      padding: 1rem 1.5rem;
-      border: none;
-      background: none;
-      font-family: inherit;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      color: #aaa;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -2px;        /* перекрываем border-bottom родителя */
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      color: #1a1410;
-      border-bottom-color: #c4a07a; /* золотая линия под активной вкладкой */
-    }
+    .tab-btn.active{color:#1a1410;border-bottom-color:#c4a07a}
 
-    /* ───── СОДЕРЖИМОЕ ВКЛАДОК ───── */
-    .tab-content { display: none; padding: 2rem; max-width: 1100px; margin: 0 auto; }
-    .tab-content.active { display: block; } /* показываем только активную */
+    .tab-content{display:none;padding:2rem;max-width:1200px;margin:0 auto}
+    .tab-content.active{display:block}
 
-    /* ───── КАРТОЧКИ СТАТИСТИКИ ───── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: #fff;
-      border: 1px solid #e8ddd4;
-      padding: 1.25rem;
-      text-align: center;
-    }
-    .stat-card__value {
-      font-size: 2rem;
-      font-weight: 600;
-      color: #8b5e3c;       /* коричневый цвет числа */
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-    .stat-card__label {
-      font-size: 0.75rem;
-      color: #aaa;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+    .stat-card{background:#fff;border:1px solid #e8ddd4;padding:1.25rem;text-align:center}
+    .stat-card__value{font-size:2rem;font-weight:600;color:#8b5e3c;display:block;margin-bottom:.25rem}
+    .stat-card__label{font-size:.72rem;color:#aaa;text-transform:uppercase;letter-spacing:.08em}
 
-    /* ───── ЗАГОЛОВОК СЕКЦИИ + КНОПКА ───── */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-    .section-header h2 { font-size: 1.1rem; font-weight: 400; }
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .section-header h2{font-size:1.1rem;font-weight:400}
 
-    /* ───── КНОПКИ ───── */
-    .btn {
-      padding: 0.5rem 1.25rem;
-      border: none;
-      font-family: inherit;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s;
+    .btn{
+      padding:.5rem 1.25rem;border:none;font-family:inherit;font-size:.75rem;
+      letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;
     }
-    .btn--gold   { background: #c4a07a; color: #fff; }
-    .btn--gold:hover { background: #8b5e3c; }
-    .btn--dark   { background: #1a1410; color: #fff; }
-    .btn--dark:hover { background: #3a2820; }
-    .btn--danger { background: #e24b4a; color: #fff; }
-    .btn--danger:hover { background: #a32d2d; }
-    .btn--small  { padding: 0.3rem 0.75rem; font-size: 0.72rem; }
+    .btn--gold{background:#c4a07a;color:#fff}
+    .btn--gold:hover{background:#8b5e3c}
+    .btn--dark{background:#1a1410;color:#fff}
+    .btn--dark:hover{background:#3a2820}
+    .btn--danger{background:#e24b4a;color:#fff}
+    .btn--danger:hover{background:#a32d2d}
+    .btn--small{padding:.3rem .75rem;font-size:.68rem}
 
-    /* ───── ТАБЛИЦА ───── */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;   /* убираем двойные границы */
-      background: #fff;
-      font-size: 0.88rem;
+    .data-table{width:100%;border-collapse:collapse;background:#fff;font-size:.82rem}
+    .data-table th{
+      background:#f0ebe3;padding:.65rem .75rem;text-align:left;
+      font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+      color:#888;border-bottom:1px solid #e8ddd4;white-space:nowrap;
     }
-    .data-table th {
-      background: #f0ebe3;
-      padding: 0.75rem 1rem;
-      text-align: left;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #888;
-      border-bottom: 1px solid #e8ddd4;
-    }
-    .data-table td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #f0ebe3; /* тонкая линия между строками */
-      vertical-align: middle;
-    }
-    .data-table tr:hover td { background: #faf8f5; } /* подсветка строки при наведении */
+    .data-table td{padding:.65rem .75rem;border-bottom:1px solid #f0ebe3;vertical-align:middle}
+    .data-table tr:hover td{background:#faf8f5}
 
-    /* ───── БЕЙДЖИ СТАТУСА ───── */
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .badge--active    { background: #eaf3de; color: #3b6d11; }  /* зелёный — активна */
-    .badge--cancelled { background: #fcebeb; color: #a32d2d; }  /* красный — отменена */
-    .badge--done      { background: #e6f1fb; color: #185fa5; }  /* синий — выполнена */
+    .badge{display:inline-block;padding:.2rem .6rem;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase}
+    .badge--active{background:#eaf3de;color:#3b6d11}
+    .badge--cancelled{background:#fcebeb;color:#a32d2d}
 
-    /* ───── ФОРМА ДОБАВЛЕНИЯ ───── */
-    .add-form {
-      background: #fff;
-      border: 1px solid #e8ddd4;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      display: none;          /* скрыта по умолчанию */
+    .add-form{background:#fff;border:1px solid #e8ddd4;padding:1.5rem;margin-bottom:1.5rem;display:none}
+    .add-form.open{display:block}
+    .add-form h3{font-size:1rem;font-weight:400;margin-bottom:1rem}
+    .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1rem}
+    .form-group label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:.3rem}
+    .form-input{
+      width:100%;border:1px solid #d4c4b0;padding:.5rem .75rem;
+      font-family:inherit;font-size:.82rem;outline:none;background:#fff;
+      transition:border-color .2s;
     }
-    .add-form.open { display: block; } /* показываем при нажатии кнопки */
-    .add-form h3 { font-size: 1rem; font-weight: 400; margin-bottom: 1rem; }
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #888;
-      margin-bottom: 0.3rem;
-    }
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      border: 1px solid #d4c4b0;
-      padding: 0.5rem 0.75rem;
-      font-family: inherit;
-      font-size: 0.88rem;
-      outline: none;
-      background: #fff;
-    }
-    .form-group input:focus,
-    .form-group select:focus { border-color: #c4a07a; }
+    .form-input:focus{border-color:#c4a07a}
 
-    /* ───── ФИЛЬТРЫ ───── */
-    .filters {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      align-items: center;
+    .filters{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+    .filters select,.filters input{
+      border:1px solid #d4c4b0;padding:.4rem .75rem;
+      font-family:inherit;font-size:.82rem;background:#fff;outline:none;
     }
-    .filters select,
-    .filters input {
-      border: 1px solid #d4c4b0;
-      padding: 0.4rem 0.75rem;
-      font-family: inherit;
-      font-size: 0.85rem;
-      background: #fff;
-      outline: none;
+    .filters label{font-size:.75rem;color:#888}
+
+    /* инлайн-редактирование */
+    .inline-input{
+      border:1px solid #d4c4b0;padding:.3rem .5rem;font-family:inherit;
+      font-size:.78rem;background:#fff;outline:none;width:100%;
     }
-    .filters label { font-size: 0.78rem; color: #888; }
+    .inline-input:focus{border-color:#c4a07a}
+    .inline-select{
+      border:1px solid #d4c4b0;padding:.3rem .5rem;font-family:inherit;
+      font-size:.78rem;background:#fff;outline:none;
+    }
+    .edit-btns{display:flex;gap:4px;flex-wrap:wrap}
   </style>
 </head>
 <body>
 
-<!-- ───── ШАПКА ───── -->
 <div class="admin-header">
   <h1>Maison Élégance — Административная панель</h1>
-  <span><a href="/" style="color:#c4a07a;text-decoration:none;">← На сайт</a></span>
+  <a href="/">← На сайт</a>
 </div>
 
-<!-- ───── ВКЛАДКИ ───── -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('stats')">Статистика</button>
-  <button class="tab-btn" onclick="switchTab('appointments')">Записи</button>
-  <button class="tab-btn" onclick="switchTab('masters')">Мастера</button>
-  <button class="tab-btn" onclick="switchTab('services')">Услуги</button>
+  <button class="tab-btn active" onclick="switchTab('stats',this)">Статистика</button>
+  <button class="tab-btn" onclick="switchTab('appointments',this)">Записи</button>
+  <button class="tab-btn" onclick="switchTab('masters',this)">Мастера</button>
+  <button class="tab-btn" onclick="switchTab('services',this)">Услуги</button>
 </div>
 
-<!-- ───── ВКЛАДКА: СТАТИСТИКА ───── -->
+<!-- СТАТИСТИКА -->
 <div class="tab-content active" id="tab-stats">
-  <div class="stats-grid" id="stats-grid">
-    <!-- карточки статистики вставит JavaScript -->
-  </div>
+  <div class="stats-grid" id="stats-grid"></div>
 </div>
 
-<!-- ───── ВКЛАДКА: ЗАПИСИ ───── -->
+<!-- ЗАПИСИ -->
 <div class="tab-content" id="tab-appointments">
-  <div class="section-header">
-    <h2>Все записи клиентов</h2>
-  </div>
-
-  <!-- фильтры для записей -->
+  <div class="section-header"><h2>Все записи клиентов</h2></div>
   <div class="filters">
     <label>Статус:</label>
     <select id="filter-status" onchange="loadAppointments()">
@@ -237,147 +121,100 @@
       <option value="cancelled">Отменённые</option>
     </select>
     <label>Дата:</label>
-    <input type="date" id="filter-date" onchange="loadAppointments()" />
+    <input type="date" id="filter-date" onchange="loadAppointments()"/>
     <button class="btn btn--dark btn--small" onclick="
       document.getElementById('filter-status').value='';
       document.getElementById('filter-date').value='';
-      loadAppointments()
-    ">Сбросить</button>
+      loadAppointments()">Сбросить</button>
   </div>
-
   <table class="data-table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Клиент</th>
-        <th>Телефон</th>
-        <th>Услуга</th>
-        <th>Мастер</th>
-        <th>Дата</th>
-        <th>Время</th>
-        <th>Статус</th>
-        <th>Действие</th>
+        <th>#</th><th>Клиент</th><th>Телефон</th><th>Услуга</th>
+        <th>Мастер</th><th>Дата</th><th>Время</th><th>Статус</th><th>Действие</th>
       </tr>
     </thead>
-    <tbody id="appointments-tbody">
-      <!-- строки вставит JavaScript -->
-    </tbody>
+    <tbody id="appointments-tbody"></tbody>
   </table>
 </div>
 
-<!-- ───── ВКЛАДКА: МАСТЕРА ───── -->
+<!-- МАСТЕРА -->
 <div class="tab-content" id="tab-masters">
   <div class="section-header">
     <h2>Список мастеров</h2>
     <button class="btn btn--gold" onclick="toggleForm('form-master')">+ Добавить мастера</button>
   </div>
 
-  <!-- форма добавления мастера (скрыта по умолчанию) -->
   <div class="add-form" id="form-master">
     <h3>Новый мастер</h3>
     <div class="form-row">
-      <div class="form-group">
-        <label>Имя *</label>
-        <input type="text" id="m-name" placeholder="Анна Смирнова" />
-      </div>
-      <div class="form-group">
-        <label>Должность *</label>
-        <input type="text" id="m-role" placeholder="Мастер маникюра" />
-      </div>
+      <div class="form-group"><label>Имя *</label><input class="form-input" type="text" id="m-name" placeholder="Анна Смирнова"/></div>
+      <div class="form-group"><label>Должность *</label><input class="form-input" type="text" id="m-role" placeholder="Мастер маникюра"/></div>
       <div class="form-group">
         <label>Специализация *</label>
-        <select id="m-spec">
+        <select class="form-input" id="m-spec">
           <option value="nails">Ногти</option>
           <option value="hair">Причёски</option>
           <option value="both">Универсал</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Опыт (лет)</label>
-        <input type="number" id="m-exp" placeholder="3" min="1" max="50" />
-      </div>
-      <div class="form-group">
-        <label>Рейтинг</label>
-        <input type="number" id="m-rating" placeholder="5.0" min="1" max="5" step="0.1" />
-      </div>
+      <div class="form-group"><label>Опыт (лет)</label><input class="form-input" type="number" id="m-exp" placeholder="3" min="1"/></div>
+      <div class="form-group"><label>Рейтинг</label><input class="form-input" type="number" id="m-rating" placeholder="5.0" min="1" max="5" step="0.1"/></div>
+      <div class="form-group"><label>Телефон</label><input class="form-input" type="tel" id="m-phone" placeholder="+7 900 000-00-00"/></div>
     </div>
     <button class="btn btn--gold" onclick="addMaster()">Сохранить</button>
-    <button class="btn btn--dark" style="margin-left:0.5rem" onclick="toggleForm('form-master')">Отмена</button>
+    <button class="btn btn--dark" style="margin-left:.5rem" onclick="toggleForm('form-master')">Отмена</button>
   </div>
 
   <table class="data-table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Имя</th>
-        <th>Должность</th>
-        <th>Специализация</th>
-        <th>Опыт</th>
-        <th>Рейтинг</th>
-        <th>Действие</th>
+        <th>#</th><th>Имя</th><th>Должность</th><th>Специализация</th>
+        <th>Опыт</th><th>Рейтинг</th><th>Телефон</th><th>Действия</th>
       </tr>
     </thead>
     <tbody id="masters-tbody"></tbody>
   </table>
 </div>
 
-<!-- ───── ВКЛАДКА: УСЛУГИ ───── -->
+<!-- УСЛУГИ -->
 <div class="tab-content" id="tab-services">
   <div class="section-header">
     <h2>Список услуг</h2>
     <button class="btn btn--gold" onclick="toggleForm('form-service')">+ Добавить услугу</button>
   </div>
 
-  <!-- форма добавления услуги -->
   <div class="add-form" id="form-service">
     <h3>Новая услуга</h3>
     <div class="form-row">
-      <div class="form-group">
-        <label>Название *</label>
-        <input type="text" id="s-name" placeholder="Маникюр классический" />
-      </div>
+      <div class="form-group"><label>Название *</label><input class="form-input" type="text" id="s-name" placeholder="Маникюр классический"/></div>
       <div class="form-group">
         <label>Категория *</label>
-        <select id="s-cat">
+        <select class="form-input" id="s-cat">
           <option value="nails">Ногти</option>
           <option value="hair">Причёски</option>
         </select>
       </div>
+      <div class="form-group"><label>Описание</label><input class="form-input" type="text" id="s-desc" placeholder="Краткое описание"/></div>
+      <div class="form-group"><label>Цена (₽) *</label><input class="form-input" type="number" id="s-price" placeholder="1500" min="0"/></div>
+      <div class="form-group"><label>Длительность (мин) *</label><input class="form-input" type="number" id="s-dur" placeholder="60" min="15"/></div>
       <div class="form-group">
-        <label>Описание</label>
-        <input type="text" id="s-desc" placeholder="Краткое описание" />
-      </div>
-      <div class="form-group">
-        <label>Цена (₽) *</label>
-        <input type="number" id="s-price" placeholder="1500" min="0" />
-      </div>
-      <div class="form-group">
-        <label>Длительность (мин) *</label>
-        <input type="number" id="s-dur" placeholder="60" min="15" />
-      </div>
-      <div class="form-group">
-        <label>Сложная услуга?</label>
-        <select id="s-complex">
+        <label>Сложная?</label>
+        <select class="form-input" id="s-complex">
           <option value="0">Нет</option>
           <option value="1">Да</option>
         </select>
       </div>
     </div>
     <button class="btn btn--gold" onclick="addService()">Сохранить</button>
-    <button class="btn btn--dark" style="margin-left:0.5rem" onclick="toggleForm('form-service')">Отмена</button>
+    <button class="btn btn--dark" style="margin-left:.5rem" onclick="toggleForm('form-service')">Отмена</button>
   </div>
 
   <table class="data-table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Название</th>
-        <th>Категория</th>
-        <th>Описание</th>
-        <th>Цена</th>
-        <th>Длительность</th>
-        <th>Сложная</th>
-        <th>Действие</th>
+        <th>#</th><th>Название</th><th>Категория</th><th>Описание</th>
+        <th>Цена</th><th>Длительность</th><th>Сложная</th><th>Действия</th>
       </tr>
     </thead>
     <tbody id="services-tbody"></tbody>
@@ -387,79 +224,50 @@
 <script>
 const API = window.location.origin + '/api';
 
-// ───── ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ─────
-function switchTab(name) {
-  // убираем active со всех вкладок и контентов
+// ───── ВКЛАДКИ ─────
+function switchTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  // добавляем active нужным элементам
-  event.target.classList.add('active');
+  btn.classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
-  // загружаем данные для выбранной вкладки
   if (name === 'stats')        loadStats();
   if (name === 'appointments') loadAppointments();
   if (name === 'masters')      loadMasters();
   if (name === 'services')     loadServices();
 }
 
-// ───── ПОКАЗАТЬ/СКРЫТЬ ФОРМУ ДОБАВЛЕНИЯ ─────
 function toggleForm(id) {
-  document.getElementById(id).classList.toggle('open'); // переключаем класс open
+  document.getElementById(id).classList.toggle('open');
 }
 
 // ───── СТАТИСТИКА ─────
 async function loadStats() {
-  const res  = await fetch(`${API}/stats`); // запрос статистики с сервера
+  const res  = await fetch(`${API}/stats`);
   const data = await res.json();
-
-  // формируем HTML карточек статистики
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card">
-      <span class="stat-card__value">${data.totalAppointments}</span>
-      <span class="stat-card__label">Всего записей</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card__value">${data.activeAppointments}</span>
-      <span class="stat-card__label">Активных</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card__value">${data.cancelledAppointments}</span>
-      <span class="stat-card__label">Отменённых</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card__value">${data.totalMasters}</span>
-      <span class="stat-card__label">Мастеров</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card__value">${data.totalServices}</span>
-      <span class="stat-card__label">Услуг</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-card__value">${data.revenue.toLocaleString('ru')} ₽</span>
-      <span class="stat-card__label">Ожидаемая выручка</span>
-    </div>
+    <div class="stat-card"><span class="stat-card__value">${data.totalAppointments}</span><span class="stat-card__label">Всего записей</span></div>
+    <div class="stat-card"><span class="stat-card__value">${data.activeAppointments}</span><span class="stat-card__label">Активных</span></div>
+    <div class="stat-card"><span class="stat-card__value">${data.cancelledAppointments}</span><span class="stat-card__label">Отменённых</span></div>
+    <div class="stat-card"><span class="stat-card__value">${data.totalMasters}</span><span class="stat-card__label">Мастеров</span></div>
+    <div class="stat-card"><span class="stat-card__value">${data.totalServices}</span><span class="stat-card__label">Услуг</span></div>
+    <div class="stat-card"><span class="stat-card__value">${(data.revenue||0).toLocaleString('ru')} ₽</span><span class="stat-card__label">Выручка</span></div>
   `;
 }
 
 // ───── ЗАПИСИ ─────
 async function loadAppointments() {
-  const status = document.getElementById('filter-status').value; // фильтр по статусу
-  const date   = document.getElementById('filter-date').value;   // фильтр по дате
-
-  const res  = await fetch(`${API}/appointments`); // загружаем все записи
-  let data   = await res.json();
-
-  // применяем фильтры на клиенте
+  const status = document.getElementById('filter-status').value;
+  const date   = document.getElementById('filter-date').value;
+  const res    = await fetch(`${API}/appointments`);
+  let data     = await res.json();
   if (status) data = data.filter(a => a.status === status);
   if (date)   data = data.filter(a => a.date === date);
 
   const tbody = document.getElementById('appointments-tbody');
-  if (data.length === 0) { // если записей нет
+  if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:2rem">Записей не найдено</td></tr>';
     return;
   }
-
-  // формируем строки таблицы
   tbody.innerHTML = data.map(a => `
     <tr>
       <td>${a.id}</td>
@@ -469,49 +277,99 @@ async function loadAppointments() {
       <td>${a.master_name}</td>
       <td>${a.date}</td>
       <td>${a.time}</td>
-      <td><span class="badge badge--${a.status}">${
-        a.status === 'active' ? 'Активна' :
-        a.status === 'cancelled' ? 'Отменена' : 'Выполнена'
-      }</span></td>
-      <td>
-        ${a.status === 'active'
-          ? `<button class="btn btn--danger btn--small" onclick="cancelAppointment(${a.id})">Отменить</button>`
-          : '—'
-        }
-      </td>
+      <td><span class="badge badge--${a.status}">${a.status==='active'?'Активна':'Отменена'}</span></td>
+      <td>${a.status==='active'?`<button class="btn btn--danger btn--small" onclick="cancelAppointment(${a.id})">Отменить</button>`:'—'}</td>
     </tr>
   `).join('');
 }
 
-// отменяем запись по id
 async function cancelAppointment(id) {
-  if (!confirm('Отменить эту запись?')) return; // спрашиваем подтверждение
-  await fetch(`${API}/appointments/${id}`, { method: 'DELETE' }); // DELETE запрос
-  loadAppointments(); // перезагружаем таблицу
-  loadStats();        // обновляем статистику
+  if (!confirm('Отменить эту запись?')) return;
+  await fetch(`${API}/appointments/${id}`, { method: 'DELETE' });
+  loadAppointments();
+  loadStats();
 }
 
 // ───── МАСТЕРА ─────
 async function loadMasters() {
   const res  = await fetch(`${API}/masters`);
   const data = await res.json();
-
-  const SPEC = { nails: 'Ногти', hair: 'Причёски', both: 'Универсал' }; // перевод специализации
+  const SPEC = { nails: 'Ногти', hair: 'Причёски', both: 'Универсал' };
 
   document.getElementById('masters-tbody').innerHTML = data.map(m => `
-    <tr>
+    <tr id="mrow-${m.id}">
       <td>${m.id}</td>
-      <td>${m.name}</td>
-      <td>${m.role}</td>
-      <td>${SPEC[m.specialization] || m.specialization}</td>
-      <td>${m.experience} лет</td>
-      <td>${m.rating.toFixed(1)} ★</td>
-      <td><button class="btn btn--danger btn--small" onclick="deleteMaster(${m.id})">Удалить</button></td>
+      <td>
+        <span class="vm">${m.name}</span>
+        <input class="em inline-input" style="display:none" id="en-${m.id}" value="${m.name}"/>
+      </td>
+      <td>
+        <span class="vm">${m.role}</span>
+        <input class="em inline-input" style="display:none" id="er-${m.id}" value="${m.role}"/>
+      </td>
+      <td>
+        <span class="vm">${SPEC[m.specialization]||m.specialization}</span>
+        <select class="em inline-select" style="display:none" id="es-${m.id}">
+          <option value="nails" ${m.specialization==='nails'?'selected':''}>Ногти</option>
+          <option value="hair"  ${m.specialization==='hair'?'selected':''}>Причёски</option>
+          <option value="both"  ${m.specialization==='both'?'selected':''}>Универсал</option>
+        </select>
+      </td>
+      <td>
+        <span class="vm">${m.experience} лет</span>
+        <input class="em inline-input" style="display:none;width:55px" type="number" id="ee-${m.id}" value="${m.experience}"/>
+      </td>
+      <td>
+        <span class="vm">${parseFloat(m.rating).toFixed(1)} ★</span>
+        <input class="em inline-input" style="display:none;width:55px" type="number" step="0.1" id="ert-${m.id}" value="${m.rating}"/>
+      </td>
+      <td>
+        <span class="vm">${m.phone||'—'}</span>
+        <input class="em inline-input" style="display:none" placeholder="+7 900 000-00-00" id="ep-${m.id}" value="${m.phone||''}"/>
+      </td>
+      <td>
+        <div class="edit-btns vm">
+          <button class="btn btn--gold btn--small" onclick="startEdit(${m.id})">Изменить</button>
+          <button class="btn btn--danger btn--small" onclick="deleteMaster(${m.id})">Удалить</button>
+        </div>
+        <div class="edit-btns em" style="display:none">
+          <button class="btn btn--gold btn--small" onclick="saveMaster(${m.id})">Сохранить</button>
+          <button class="btn btn--dark btn--small" onclick="cancelEdit(${m.id})">Отмена</button>
+        </div>
+      </td>
     </tr>
   `).join('');
 }
 
-// добавляем нового мастера
+function startEdit(id) {
+  document.querySelectorAll(`#mrow-${id} .vm`).forEach(el => el.style.display='none');
+  document.querySelectorAll(`#mrow-${id} .em`).forEach(el => el.style.display='');
+}
+
+function cancelEdit(id) {
+  document.querySelectorAll(`#mrow-${id} .vm`).forEach(el => el.style.display='');
+  document.querySelectorAll(`#mrow-${id} .em`).forEach(el => el.style.display='none');
+}
+
+async function saveMaster(id) {
+  const body = {
+    name:           document.getElementById(`en-${id}`).value.trim(),
+    role:           document.getElementById(`er-${id}`).value.trim(),
+    specialization: document.getElementById(`es-${id}`).value,
+    experience:     document.getElementById(`ee-${id}`).value,
+    rating:         document.getElementById(`ert-${id}`).value,
+    phone:          document.getElementById(`ep-${id}`).value.trim(),
+  };
+  if (!body.name||!body.role) return alert('Заполните имя и должность');
+  const res = await fetch(`${API}/masters/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (res.ok) { loadMasters(); loadStats(); }
+  else alert('Ошибка при сохранении');
+}
+
 async function addMaster() {
   const body = {
     name:           document.getElementById('m-name').value.trim(),
@@ -519,22 +377,20 @@ async function addMaster() {
     specialization: document.getElementById('m-spec').value,
     experience:     document.getElementById('m-exp').value,
     rating:         document.getElementById('m-rating').value || 5.0,
+    phone:          document.getElementById('m-phone').value.trim(),
   };
-  if (!body.name || !body.role) return alert('Заполните имя и должность');
-
+  if (!body.name||!body.role) return alert('Заполните имя и должность');
   await fetch(`${API}/masters`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
-  // очищаем поля формы
-  ['m-name','m-role','m-exp','m-rating'].forEach(id => document.getElementById(id).value = '');
-  toggleForm('form-master'); // скрываем форму
-  loadMasters();             // обновляем таблицу
-  loadStats();               // обновляем статистику
+  ['m-name','m-role','m-exp','m-rating','m-phone'].forEach(id => document.getElementById(id).value='');
+  toggleForm('form-master');
+  loadMasters();
+  loadStats();
 }
 
-// удаляем мастера
 async function deleteMaster(id) {
   if (!confirm('Удалить мастера? Это действие нельзя отменить.')) return;
   await fetch(`${API}/masters/${id}`, { method: 'DELETE' });
@@ -546,45 +402,41 @@ async function deleteMaster(id) {
 async function loadServices() {
   const res  = await fetch(`${API}/services`);
   const data = await res.json();
-
   document.getElementById('services-tbody').innerHTML = data.map(s => `
     <tr>
       <td>${s.id}</td>
       <td>${s.name}</td>
-      <td>${s.category === 'nails' ? 'Ногти' : 'Причёски'}</td>
-      <td>${s.description}</td>
-      <td>${s.price.toLocaleString('ru')} ₽</td>
+      <td>${s.category==='nails'?'Ногти':'Причёски'}</td>
+      <td>${s.description||'—'}</td>
+      <td>${(s.price||0).toLocaleString('ru')} ₽</td>
       <td>${s.duration} мин</td>
-      <td>${s.is_complex ? '★ Да' : 'Нет'}</td>
+      <td>${s.is_complex?'★ Да':'Нет'}</td>
       <td><button class="btn btn--danger btn--small" onclick="deleteService(${s.id})">Удалить</button></td>
     </tr>
   `).join('');
 }
 
-// добавляем новую услугу
 async function addService() {
   const body = {
-    name:       document.getElementById('s-name').value.trim(),
-    category:   document.getElementById('s-cat').value,
-    description:document.getElementById('s-desc').value.trim(),
-    price:      document.getElementById('s-price').value,
-    duration:   document.getElementById('s-dur').value,
-    is_complex: document.getElementById('s-complex').value === '1',
+    name:        document.getElementById('s-name').value.trim(),
+    category:    document.getElementById('s-cat').value,
+    description: document.getElementById('s-desc').value.trim(),
+    price:       document.getElementById('s-price').value,
+    duration:    document.getElementById('s-dur').value,
+    is_complex:  document.getElementById('s-complex').value === '1',
   };
-  if (!body.name || !body.price || !body.duration) return alert('Заполните обязательные поля');
-
+  if (!body.name||!body.price||!body.duration) return alert('Заполните обязательные поля');
   await fetch(`${API}/services`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
-  ['s-name','s-desc','s-price','s-dur'].forEach(id => document.getElementById(id).value = '');
+  ['s-name','s-desc','s-price','s-dur'].forEach(id => document.getElementById(id).value='');
   toggleForm('form-service');
   loadServices();
   loadStats();
 }
 
-// удаляем услугу
 async function deleteService(id) {
   if (!confirm('Удалить услугу?')) return;
   await fetch(`${API}/services/${id}`, { method: 'DELETE' });
@@ -593,7 +445,7 @@ async function deleteService(id) {
 }
 
 // ───── ЗАПУСК ─────
-loadStats(); // при загрузке страницы сразу показываем статистику
+loadStats();
 </script>
 </body>
 </html>

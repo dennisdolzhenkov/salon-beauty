@@ -117,3 +117,91 @@ app.get('/api/busy-slots', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Сервер запущен: http://localhost:${PORT}`);
 });
+
+// ───── АДМИН: ДОБАВИТЬ МАСТЕРА ─────
+app.post('/api/masters', (req, res) => {
+  try {
+    const { name, role, specialization, experience, rating, phone } = req.body;
+    if (!name || !role || !specialization) {
+      return res.status(400).json({ error: 'Заполните обязательные поля' });
+    }
+    const result = db.prepare(
+      'INSERT INTO masters (name, role, specialization, experience, rating, phone) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(name, role, specialization, Number(experience) || 1, Number(rating) || 5.0, phone || '');
+    res.status(201).json({ success: true, id: result.lastInsertRowid });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ───── АДМИН: РЕДАКТИРОВАТЬ МАСТЕРА ─────
+app.put('/api/masters/:id', (req, res) => {
+  try {
+    const { name, role, specialization, experience, rating, phone } = req.body;
+    if (!name || !role || !specialization) {
+      return res.status(400).json({ error: 'Заполните обязательные поля' });
+    }
+    db.prepare(
+      'UPDATE masters SET name=?, role=?, specialization=?, experience=?, rating=?, phone=? WHERE id=?'
+    ).run(name, role, specialization, Number(experience), Number(rating), phone || '', req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ───── АДМИН: УДАЛИТЬ МАСТЕРА ─────
+app.delete('/api/masters/:id', (req, res) => {
+  try {
+    db.prepare('DELETE FROM masters WHERE id = ?').run(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ───── АДМИН: ДОБАВИТЬ УСЛУГУ ─────
+app.post('/api/services', (req, res) => {
+  try {
+    const { name, category, description, price, duration, is_complex } = req.body;
+    if (!name || !category || !price || !duration) {
+      return res.status(400).json({ error: 'Заполните обязательные поля' });
+    }
+    const result = db.prepare(
+      'INSERT INTO services (name, category, description, price, duration, is_complex) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(name, category, description || '', Number(price), Number(duration), is_complex ? 1 : 0);
+    res.status(201).json({ success: true, id: result.lastInsertRowid });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ───── АДМИН: УДАЛИТЬ УСЛУГУ ─────
+app.delete('/api/services/:id', (req, res) => {
+  try {
+    db.prepare('DELETE FROM services WHERE id = ?').run(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ───── АДМИН: СТАТИСТИКА ─────
+app.get('/api/stats', (req, res) => {
+  try {
+    const totalAppointments    = db.prepare('SELECT COUNT(*) as c FROM appointments').get().c;
+    const activeAppointments   = db.prepare('SELECT COUNT(*) as c FROM appointments WHERE status = ?').get('active').c;
+    const cancelledAppointments = db.prepare('SELECT COUNT(*) as c FROM appointments WHERE status = ?').get('cancelled').c;
+    const totalMasters  = db.prepare('SELECT COUNT(*) as c FROM masters').get().c;
+    const totalServices = db.prepare('SELECT COUNT(*) as c FROM services').get().c;
+    const revenue = db.prepare(`
+      SELECT COALESCE(SUM(s.price), 0) as total
+      FROM appointments a
+      JOIN services s ON a.service_id = s.id
+      WHERE a.status = 'active'
+    `).get().total;
+    res.json({ totalAppointments, activeAppointments, cancelledAppointments, totalMasters, totalServices, revenue });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});

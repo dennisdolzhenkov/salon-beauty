@@ -12,7 +12,8 @@ db.exec(`
     specialization TEXT NOT NULL,         -- специализация: nails / hair / both
     experience INTEGER,                   -- опыт работы в годах
     rating REAL DEFAULT 5.0,              -- рейтинг, по умолчанию 5.0
-    photo TEXT                            -- ссылка на фото (необязательно)
+    photo TEXT,                           -- ссылка на фото (необязательно)
+    phone TEXT DEFAULT ''                            -- телефон мастера
   );
 
   -- ТАБЛИЦА УСЛУГ
